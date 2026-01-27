@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Course Title - Module Name</title>
+
+    <!--
+    ============================================================
+    HTML PRESENTATION TEMPLATE - Curriculum Dev Kit v1.0
+
+    USAGE: This template is used in Phase 4 (Production) after
+    your Presentation Development Brief is LOCKED.
+
+    WORKFLOW:
+    1. Copy this file and rename for your module
+    2. Update CSS variables for your color scheme (optional)
+    3. Build slides following your brief's structure
+    4. Update all slide numbers and footer text
+    5. Test navigation and print output
+
+    SLIDE TYPES INCLUDED:
+    - Title Slide (MANDATORY - Opening)
+    - Learning Objectives (MANDATORY - Opening)
+    - Module Overview/Roadmap (MANDATORY - Opening)
+    - Standard Content Slide
+    - Nested Bullets Slide
+    - Two-Column Comparison Slide
+    - Callout/Key Takeaway Slide
+    - Case Study Slide
+    - Stats Grid Slide
+    - Section Header Slide
+    - Hook Slide
+    - Sources Slide (MANDATORY - Closing)
+    - Bias Check Slide (MANDATORY - Closing)
+    - Next Session Preview (MANDATORY - Closing, REQUIRES VERIFICATION)
+    - Key Takeaways Slide (MANDATORY - Closing)
+    ============================================================
+    -->
+
+    <style>
+        /* ========================================
+           CSS VARIABLES - CUSTOMIZE THESE
+           See design-system.md for options
+           ======================================== */
+
+        :root {
+            /* Brand Colors - Default Scheme (Navy Blue + Gold) */
+            --primary-color: #003B7A;        /* Navy Blue - Main headings, accents */
+            --secondary-color: #F4B41A;      /* Gold - Subheadings, highlights, bullets */
+            --text-color: #2C3E50;           /* Dark Gray-Blue - Body text */
+            --background-color: #FFFFFF;     /* White - Slide background */
+            --footer-color: #7F8C8D;         /* Medium Gray - Footer text */
+
+            /* Typography */
+            --font-main: 'Segoe UI', 'Arial', sans-serif;
+            --font-code: 'Consolas', 'Courier New', monospace;
+
+            /* Slide Spacing */
+            --slide-padding: 4vh 6vw;
+            --header-height: 15vh;
+            --footer-height: 8vh;
+            --content-spacing: 3vh;
+        }
+
+        /* ========================================
+           FULL-SCREEN SLIDE CONTAINER
+           ======================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            overflow: hidden;
+            background: #000;
+        }
+
+        .slide {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--background-color);
+            display: none;
+            flex-direction: column;
+            padding: var(--slide-padding);
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* ========================================
+           SLIDE HEADER
+           ======================================== */
+
+        .slide-header {
+            min-height: var(--header-height);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 2vh;
+            flex-shrink: 0;
+        }
+
+        .slide-header h1 {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .slide-header h2 {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+            margin-top: 1vh;
+        }
+
+        /* ========================================
+           SLIDE CONTENT
+           ======================================== */
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+            padding: var(--content-spacing) 0;
+        }
+
+        .slide-content h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 2vh;
+            font-weight: 600;
+        }
+
+        .slide-content h3 {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin: 3vh 0 2vh 0;
+            font-weight: 500;
+        }
+
+        .slide-content p {
+            font-size: 1.8rem;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin-bottom: 2vh;
+        }
+
+        /* ========================================
+           LISTS - Unordered
+           ======================================== */
+
+        .slide-content ul {
+            list-style: none;
+            padding-left: 0;
+            margin: 2vh 0;
+        }
+
+        .slide-content ul li {
+            font-size: 2rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            margin-bottom: 2.5vh;
+            padding-left: 2.5rem;
+            position: relative;
+        }
+
+        .slide-content ul li::before {
+            content: "●";
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: 0.2rem;
+        }
+
+        .slide-content ul ul {
+            margin-top: 1.5vh;
+            margin-bottom: 1.5vh;
+            margin-left: 2rem;
+        }
+
+        .slide-content ul ul li {
+            font-size: 1.6rem;
+            margin-bottom: 1.5vh;
+        }
+
+        .slide-content ul ul li::before {
+            content: "○";
+            font-size: 1.2rem;
+        }
+
+        /* ========================================
+           LISTS - Ordered
+           ======================================== */
+
+        .slide-content ol {
+            counter-reset: item;
+            list-style: none;
+            padding-left: 0;
+            margin: 2vh 0;
+        }
+
+        .slide-content ol li {
+            font-size: 2rem;
+            line-height: 1.5;
+            color: var(--text-color);
+            margin-bottom: 2.5vh;
+            padding-left: 3rem;
+            position: relative;
+            counter-increment: item;
+        }
+
+        .slide-content ol li::before {
+            content: counter(item) ".";
+            color: var(--primary-color);
+            font-weight: bold;
+            font-size: 2rem;
+            position: absolute;
+            left: 0;
+        }
+
+        /* ========================================
+           TWO-COLUMN LAYOUT
+           ======================================== */
+
+        .two-column {
+            display: flex;
+            gap: 4vw;
+            align-items: flex-start;
+        }
+
+        .two-column .column {
+            flex: 1;
+        }
+
+        .two-column .column h3 {
+            margin-top: 0;
+        }
+
+        /* ========================================
+           TEXT EMPHASIS
+           ======================================== */
+
+        strong, b {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        em, i {
+            color: var(--secondary-color);
+            font-style: italic;
+        }
+
+        .highlight {
+            background: #FFF9C4;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+        }
+
+        /* ========================================
+           CONTENT BOXES
+           ======================================== */
+
+        .callout-box {
+            background: #FFFFFF;
+            border-left: 5px solid var(--secondary-color);
+            padding: 2vh 2vw;
+            margin: 3vh 0;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .callout-box h3 {
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+
+        .callout-box p,
+        .callout-box li {
+            font-size: 1.6rem;
+        }
+
+        .key-takeaway {
+            background: #FFFFFF;
+            border-left: 5px solid var(--secondary-color);
+        }
+
+        .example {
+            background: #FFFFFF;
+            border-left: 5px solid var(--primary-color);
+        }
+
+        .warning-box {
+            background: #FFFFFF;
+            border-left: 5px solid #D32F2F;
+        }
+
+        .bias-check {
+            background: #FFFFFF;
+            border-left: 5px solid #7B1FA2;
+        }
+
+        /* Stats Callout */
+        .stat-callout {
+            background: #FFFFFF;
+            border-left: 5px solid #388E3C;
+            text-align: center;
+            padding: 4vh 4vw;
+        }
+
+        .stat-callout .big-stat {
+            font-size: 6rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .stat-callout .stat-context {
+            font-size: 1.8rem;
+            color: var(--text-color);
+            margin-top: 2vh;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3vw;
+            margin: 3vh 0;
+        }
+
+        .stat-item {
+            background: #FFFFFF;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 3vh 2vw;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 1.4rem;
+            color: var(--text-color);
+            margin-top: 1vh;
+        }
+
+        /* ========================================
+           SLIDE FOOTER
+           ======================================== */
+
+        .slide-footer {
+            min-height: var(--footer-height);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-top: 2px solid #E0E0E0;
+            padding-top: 2vh;
+            flex-shrink: 0;
+        }
+
+        .slide-footer p {
+            font-size: 1.2rem;
+            color: var(--footer-color);
+            margin: 0;
+        }
+
+        .slide-number {
+            font-size: 1.2rem;
+            color: var(--footer-color);
+        }
+
+        /* ========================================
+           NAVIGATION CONTROLS
+           ======================================== */
+
+        .nav-button {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: none;
+            font-size: 3rem;
+            padding: 2vh 1vw;
+            cursor: pointer;
+            z-index: 100;
+            transition: background 0.3s;
+        }
+
+        .nav-button:hover {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .nav-prev { left: 0; }
+        .nav-next { right: 0; }
+
+        /* ========================================
+           TITLE SLIDE STYLING
+           ======================================== */
+
+        .title-slide .slide-header {
+            border-bottom: none;
+            min-height: auto;
+        }
+
+        .title-slide .slide-content {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 4.5rem;
+            margin-bottom: 3vh;
+        }
+
+        .title-slide h2 {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+        }
+
+        .title-slide .course-info {
+            font-size: 1.8rem;
+            color: var(--footer-color);
+            margin-top: 5vh;
+        }
+
+        /* ========================================
+           SECTION HEADER SLIDE
+           ======================================== */
+
+        .section-header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #005599 100%);
+        }
+
+        .section-header .slide-header {
+            border-bottom: none;
+        }
+
+        .section-header .slide-header h1 {
+            color: white;
+            font-size: 4rem;
+        }
+
+        .section-header .slide-header h2 {
+            color: var(--secondary-color);
+        }
+
+        .section-header .slide-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 2rem;
+        }
+
+        .section-header .slide-footer {
+            border-top-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .section-header .slide-footer p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* ========================================
+           HOOK SLIDE
+           ======================================== */
+
+        .hook-slide .slide-content {
+            justify-content: center;
+            text-align: center;
+        }
+
+        .hook-slide .hook-text {
+            font-size: 3rem;
+            color: var(--text-color);
+            line-height: 1.4;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        .hook-slide .hook-emphasis {
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-top: 4vh;
+        }
+
+        /* ========================================
+           SOURCES SLIDE
+           ======================================== */
+
+        .sources-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sources-list li {
+            font-size: 1.4rem;
+            color: var(--text-color);
+            margin-bottom: 1.5vh;
+            padding-left: 0;
+        }
+
+        .sources-list li::before {
+            content: none;
+        }
+
+        /* ========================================
+           PRINT STYLES
+           ======================================== */
+
+        @media print {
+            .slide {
+                position: relative;
+                display: flex !important;
+                page-break-after: always;
+                height: 100vh;
+            }
+
+            .nav-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Buttons -->
+    <button class="nav-button nav-prev" onclick="changeSlide(-1)">&#8249;</button>
+    <button class="nav-button nav-next" onclick="changeSlide(1)">&#8250;</button>
+
+    <!-- ========================================
+         SLIDE 1: TITLE SLIDE (MANDATORY)
+         ======================================== -->
+
+    <div class="slide active title-slide">
+        <div class="slide-header">
+            <h1>Main Presentation Title</h1>
+        </div>
+        <div class="slide-content">
+            <h2>Subtitle or Module Name</h2>
+            <p class="course-info">Course Name | Instructor Name | Date</p>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">1</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 2: LEARNING OBJECTIVES (MANDATORY)
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Learning Objectives</h1>
+            <h2>What You'll Be Able to Do</h2>
+        </div>
+        <div class="slide-content">
+            <p>By the end of this session, you will be able to:</p>
+            <ol>
+                <li>First measurable learning outcome using action verb</li>
+                <li>Second measurable learning outcome using action verb</li>
+                <li>Third measurable learning outcome using action verb</li>
+                <li>Fourth measurable learning outcome using action verb</li>
+            </ol>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">2</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 3: MODULE OVERVIEW (MANDATORY)
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Today's Roadmap</h1>
+        </div>
+        <div class="slide-content">
+            <ol>
+                <li><strong>Section One Title</strong> — Brief description</li>
+                <li><strong>Section Two Title</strong> — Brief description</li>
+                <li><strong>Section Three Title</strong> — Brief description</li>
+                <li><strong>Section Four Title</strong> — Brief description</li>
+                <li><strong>Key Takeaways</strong> — Summary and reflection</li>
+            </ol>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">3</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 4: STANDARD CONTENT SLIDE
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Slide Title Goes Here</h1>
+        </div>
+        <div class="slide-content">
+            <ul>
+                <li>First talking point with important information</li>
+                <li>Second talking point with context and details</li>
+                <li>Third talking point demonstrating key concept</li>
+                <li>Fourth talking point with practical application</li>
+            </ul>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">4</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 5: TWO-COLUMN COMPARISON
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Comparison: Concept A vs. Concept B</h1>
+        </div>
+        <div class="slide-content">
+            <div class="two-column">
+                <div class="column">
+                    <h3>Concept A</h3>
+                    <ul>
+                        <li>First characteristic</li>
+                        <li>Second characteristic</li>
+                        <li>Third characteristic</li>
+                    </ul>
+                </div>
+                <div class="column">
+                    <h3>Concept B</h3>
+                    <ul>
+                        <li>First characteristic</li>
+                        <li>Second characteristic</li>
+                        <li>Third characteristic</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">5</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 6: KEY TAKEAWAY CALLOUT
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Slide with Key Insight</h1>
+        </div>
+        <div class="slide-content">
+            <ul>
+                <li>Context-setting point</li>
+                <li>Introductory concept</li>
+            </ul>
+
+            <div class="callout-box key-takeaway">
+                <h3>Key Takeaway</h3>
+                <p>This is the critical insight you want learners to remember.</p>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">6</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         SLIDE 7: STATS GRID
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Impact Metrics</h1>
+        </div>
+        <div class="slide-content">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">75%</span>
+                    <span class="stat-label">Success Rate</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">30%</span>
+                    <span class="stat-label">Time Saved</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">15%</span>
+                    <span class="stat-label">Cost Reduction</span>
+                </div>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">7</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         ADD YOUR CONTENT SLIDES HERE
+         Copy templates above and modify
+         ======================================== -->
+
+    <!-- ========================================
+         SOURCES SLIDE (MANDATORY)
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Sources</h1>
+        </div>
+        <div class="slide-content">
+            <ul class="sources-list">
+                <li>Author/Organization. (Year). <em>Title</em>. Publication.</li>
+                <li>Add your sources here.</li>
+            </ul>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">8</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         BIAS CHECK SLIDE (MANDATORY)
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Bias Check</h1>
+            <h2>Examining Our Assumptions</h2>
+        </div>
+        <div class="slide-content">
+            <div class="callout-box bias-check">
+                <h3>Bias Name</h3>
+                <p><strong>What it is:</strong> Description of the bias</p>
+                <p><strong>How it shows up:</strong> Example in context</p>
+                <p><strong>Counter-strategy:</strong> What to do instead</p>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">9</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         KEY TAKEAWAYS (MANDATORY)
+         ======================================== -->
+
+    <div class="slide">
+        <div class="slide-header">
+            <h1>Key Takeaways</h1>
+        </div>
+        <div class="slide-content">
+            <ul>
+                <li>Main insight #1</li>
+                <li>Main insight #2</li>
+                <li>Main insight #3</li>
+            </ul>
+
+            <div class="callout-box key-takeaway">
+                <h3>Remember This</h3>
+                <p>The single most important takeaway from this session.</p>
+            </div>
+        </div>
+        <div class="slide-footer">
+            <p>Course Name | Module Name</p>
+            <p class="slide-number">10</p>
+        </div>
+    </div>
+
+    <!-- ========================================
+         JAVASCRIPT - NAVIGATION
+         ======================================== -->
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + slides.length) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                changeSlide(1);
+            }
+        });
+
+        // Click to advance
+        document.querySelectorAll('.slide').forEach(slide => {
+            slide.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('nav-button')) {
+                    changeSlide(1);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>
