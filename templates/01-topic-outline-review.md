@@ -1,3 +1,10 @@
+<!--
+Template: Topic Outline Review
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Topic Outline Review Template
 
 **Purpose:** Structured document for instructor review of existing presentation content before rework begins

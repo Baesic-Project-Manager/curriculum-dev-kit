@@ -1,3 +1,10 @@
+<!--
+Template: Presentation Development Brief
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Presentation Development Brief Template
 
 **Purpose:** Complete this document BEFORE building any slides. This brief becomes your production blueprint — follow it during Phase 4.

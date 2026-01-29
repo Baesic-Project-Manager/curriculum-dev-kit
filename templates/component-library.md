@@ -1,3 +1,10 @@
+<!--
+Template: Component Library
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Component Library
 
 Copy-paste ready components for HTML presentations. Each component follows the design system standards.

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Budget Calculator - Teaching at Scale</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --success: #16a34a;
+      --warning: #ca8a04;
+      --danger: #dc2626;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      margin: 0;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 1.1rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+    }
+
+    .help-text {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: var(--primary-hover);
+    }
+
+    .result {
+      display: none;
+    }
+
+    .result.visible {
+      display: block;
+    }
+
+    .result-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .result-item {
+      text-align: center;
+      padding: 1rem;
+      background: var(--bg);
+      border-radius: 4px;
+    }
+
+    .result-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .result-value.warning {
+      color: var(--warning);
+    }
+
+    .result-value.danger {
+      color: var(--danger);
+    }
+
+    .result-value.success {
+      color: var(--success);
+    }
+
+    .result-label {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .calculation-steps {
+      background: var(--bg);
+      padding: 1rem;
+      border-radius: 4px;
+      font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+      font-size: 0.875rem;
+      white-space: pre-line;
+    }
+
+    .copy-section {
+      margin-top: 1.5rem;
+    }
+
+    .copy-btn {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      width: auto;
+    }
+
+    .copy-btn:hover {
+      background: var(--primary);
+      color: white;
+    }
+
+    .copy-btn.copied {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .allocation-section {
+      margin-top: 1.5rem;
+    }
+
+    .allocation-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .allocation-table th,
+    .allocation-table td {
+      padding: 0.5rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .allocation-table th {
+      font-weight: 500;
+      background: var(--bg);
+    }
+
+    .allocation-input {
+      width: 60px;
+      padding: 0.25rem 0.5rem;
+      text-align: center;
+    }
+
+    .allocation-total {
+      font-weight: 600;
+    }
+
+    .allocation-total.over {
+      color: var(--danger);
+    }
+
+    .allocation-total.under {
+      color: var(--success);
+    }
+
+    footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+      margin-top: 2rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Slide Budget Calculator</h1>
+    <p class="subtitle">Calculate your maximum slide count based on session constraints</p>
+
+    <div class="card">
+      <h2>Session Parameters</h2>
+      <div class="input-row">
+        <div class="form-group">
+          <label for="total">Total Session Time (minutes)</label>
+          <input type="number" id="total" value="90" min="15" max="480">
+          <p class="help-text">Total scheduled session length</p>
+        </div>
+        <div class="form-group">
+          <label for="activities">Activities Time (minutes)</label>
+          <input type="number" id="activities" value="15" min="0" max="120">
+          <p class="help-text">Planned hands-on activities, exercises</p>
+        </div>
+      </div>
+      <div class="input-row">
+        <div class="form-group">
+          <label for="discussion">Discussion Time (minutes)</label>
+          <input type="number" id="discussion" value="10" min="0" max="60">
+          <p class="help-text">Structured Q&A, group discussion</p>
+        </div>
+        <div class="form-group">
+          <label for="buffer">Buffer (minutes)</label>
+          <input type="number" id="buffer" value="5" min="0" max="30">
+          <p class="help-text">Transitions, tech issues, overrun protection</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="pace">Delivery Pace</label>
+        <select id="pace">
+          <option value="2">Fast (2 min/slide) - Dense content, experienced audience</option>
+          <option value="2.5" selected>Standard (2.5 min/slide) - Recommended default</option>
+          <option value="3">Relaxed (3 min/slide) - Complex topics, more discussion</option>
+          <option value="3.5">Thorough (3.5 min/slide) - Deep dives, demos</option>
+        </select>
+        <p class="help-text">How long you typically spend on each content slide</p>
+      </div>
+      <button onclick="calculate()">Calculate Slide Budget</button>
+    </div>
+
+    <div class="card result" id="result">
+      <h2>Your Slide Budget</h2>
+
+      <div class="result-summary">
+        <div class="result-item">
+          <div class="result-value" id="presentationTime">60</div>
+          <div class="result-label">Presentation Minutes</div>
+        </div>
+        <div class="result-item">
+          <div class="result-value" id="maxSlides">24</div>
+          <div class="result-label">Maximum Slides</div>
+        </div>
+        <div class="result-item">
+          <div class="result-value" id="contentSlides">20</div>
+          <div class="result-label">Content Slides*</div>
+        </div>
+      </div>
+
+      <p class="help-text">*Content slides = Maximum slides minus ~4 required slides (title, objectives, summary, etc.)</p>
+
+      <div class="calculation-steps" id="calculation"></div>
+
+      <div class="copy-section">
+        <button class="copy-btn" onclick="copyToClipboard()">Copy for Brief</button>
+      </div>
+
+      <div class="allocation-section">
+        <h3>Slide Allocation Planner</h3>
+        <p class="help-text">Plan how to distribute your slides across topics:</p>
+        <table class="allocation-table">
+          <thead>
+            <tr>
+              <th>Section</th>
+              <th>Priority</th>
+              <th>Slides</th>
+            </tr>
+          </thead>
+          <tbody id="allocationBody">
+            <tr>
+              <td>Opening (Title, Objectives, Overview)</td>
+              <td>Required</td>
+              <td><input type="number" class="allocation-input" value="3" min="0" max="20" onchange="updateAllocation()"></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Topic 1" style="border:none;background:transparent;width:100%"></td>
+              <td>
+                <select style="border:none;background:transparent" onchange="updateAllocation()">
+                  <option>HIGH</option>
+                  <option>MEDIUM</option>
+                  <option>LOW</option>
+                </select>
+              </td>
+              <td><input type="number" class="allocation-input" value="8" min="0" max="50" onchange="updateAllocation()"></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Topic 2" style="border:none;background:transparent;width:100%"></td>
+              <td>
+                <select style="border:none;background:transparent" onchange="updateAllocation()">
+                  <option>HIGH</option>
+                  <option selected>MEDIUM</option>
+                  <option>LOW</option>
+                </select>
+              </td>
+              <td><input type="number" class="allocation-input" value="5" min="0" max="50" onchange="updateAllocation()"></td>
+            </tr>
+            <tr>
+              <td><input type="text" placeholder="Topic 3" style="border:none;background:transparent;width:100%"></td>
+              <td>
+                <select style="border:none;background:transparent" onchange="updateAllocation()">
+                  <option>HIGH</option>
+                  <option>MEDIUM</option>
+                  <option selected>LOW</option>
+                </select>
+              </td>
+              <td><input type="number" class="allocation-input" value="3" min="0" max="50" onchange="updateAllocation()"></td>
+            </tr>
+            <tr>
+              <td>Closing (Summary, Q&A, Next Steps)</td>
+              <td>Required</td>
+              <td><input type="number" class="allocation-input" value="2" min="0" max="10" onchange="updateAllocation()"></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="2"><strong>Total Allocated</strong></td>
+              <td class="allocation-total" id="allocationTotal">21</td>
+            </tr>
+            <tr>
+              <td colspan="2">Budget Remaining</td>
+              <td id="allocationRemaining">3</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Quick Reference</h2>
+      <table style="width:100%; font-size:0.875rem;">
+        <thead>
+          <tr>
+            <th>Session Length</th>
+            <th>Typical Budget</th>
+            <th>Content Slides</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>45 min</td><td>~14 slides</td><td>~10</td></tr>
+          <tr><td>60 min</td><td>~20 slides</td><td>~16</td></tr>
+          <tr><td>90 min</td><td>~28 slides</td><td>~24</td></tr>
+          <tr><td>120 min</td><td>~38 slides</td><td>~34</td></tr>
+        </tbody>
+      </table>
+      <p class="help-text" style="margin-top:1rem">Assumes standard pace, 15 min activities, 5 min buffer</p>
+    </div>
+
+    <footer>
+      Part of the <a href="https://github.com/Matticus34/teaching-at-scale">Teaching at Scale</a> methodology
+      &bull;
+      <a href="https://github.com/Baesic-Project-Manager/curriculum-dev-kit">curriculum-dev-kit</a>
+    </footer>
+  </div>
+
+  <script>
+    let currentBudget = 24;
+
+    function calculate() {
+      const total = parseInt(document.getElementById('total').value) || 0;
+      const activities = parseInt(document.getElementById('activities').value) || 0;
+      const discussion = parseInt(document.getElementById('discussion').value) || 0;
+      const buffer = parseInt(document.getElementById('buffer').value) || 0;
+      const pace = parseFloat(document.getElementById('pace').value);
+
+      const presentationTime = Math.max(0, total - activities - discussion - buffer);
+      const maxSlides = Math.floor(presentationTime / pace);
+      const contentSlides = Math.max(0, maxSlides - 4); // Reserve 4 for required slides
+
+      currentBudget = maxSlides;
+
+      // Update display
+      const presTimeEl = document.getElementById('presentationTime');
+      const maxSlidesEl = document.getElementById('maxSlides');
+      const contentSlidesEl = document.getElementById('contentSlides');
+
+      presTimeEl.textContent = presentationTime;
+      maxSlidesEl.textContent = maxSlides;
+      contentSlidesEl.textContent = contentSlides;
+
+      // Color coding
+      presTimeEl.className = 'result-value';
+      if (presentationTime < 20) {
+        presTimeEl.classList.add('danger');
+      } else if (presentationTime < 40) {
+        presTimeEl.classList.add('warning');
+      }
+
+      maxSlidesEl.className = 'result-value';
+      if (maxSlides < 10) {
+        maxSlidesEl.classList.add('danger');
+      } else if (maxSlides > 50) {
+        maxSlidesEl.classList.add('warning');
+      } else {
+        maxSlidesEl.classList.add('success');
+      }
+
+      // Calculation steps
+      const calculation = `Total session time:         ${total} minutes
+Minus activities:          -${activities} minutes
+Minus discussion:          -${discussion} minutes
+Minus buffer:              -${buffer} minutes
+= Presentation time:        ${presentationTime} minutes
+
+÷ ${pace} min/slide =       ${maxSlides} slides maximum
+
+Reserved for required:     -4 slides
+= Content slides:           ${contentSlides} slides`;
+
+      document.getElementById('calculation').textContent = calculation;
+
+      // Show result
+      document.getElementById('result').classList.add('visible');
+
+      // Update allocation check
+      updateAllocation();
+    }
+
+    function updateAllocation() {
+      const inputs = document.querySelectorAll('.allocation-input');
+      let total = 0;
+      inputs.forEach(input => {
+        total += parseInt(input.value) || 0;
+      });
+
+      const totalEl = document.getElementById('allocationTotal');
+      const remainingEl = document.getElementById('allocationRemaining');
+
+      totalEl.textContent = total;
+      totalEl.className = 'allocation-total';
+
+      const remaining = currentBudget - total;
+      remainingEl.textContent = remaining;
+
+      if (total > currentBudget) {
+        totalEl.classList.add('over');
+        remainingEl.style.color = '#dc2626';
+      } else {
+        totalEl.classList.add('under');
+        remainingEl.style.color = '#16a34a';
+      }
+    }
+
+    function copyToClipboard() {
+      const total = document.getElementById('total').value;
+      const activities = document.getElementById('activities').value;
+      const discussion = document.getElementById('discussion').value;
+      const buffer = document.getElementById('buffer').value;
+      const pace = document.getElementById('pace').value;
+      const presentationTime = document.getElementById('presentationTime').textContent;
+      const maxSlides = document.getElementById('maxSlides').textContent;
+
+      const text = `## Timing Calculations
+
+Total session time:           ${total} minutes
+Minus planned activities:     -${activities} minutes
+Minus structured discussion:  -${discussion} minutes
+Minus transitions/buffer:     -${buffer} minutes
+= Actual presentation time:   ${presentationTime} minutes
+
+÷ ${pace} minutes per slide = ${maxSlides} slides maximum`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        const btn = document.querySelector('.copy-btn');
+        btn.textContent = 'Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copy for Brief';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Calculate on load
+    calculate();
+  </script>
+</body>
+</html>

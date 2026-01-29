@@ -1,3 +1,10 @@
+<!--
+Template: Speaker Notes Sample
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Speaker Notes Sample
 
 **Purpose:** Demonstrates the format specification in action with realistic examples

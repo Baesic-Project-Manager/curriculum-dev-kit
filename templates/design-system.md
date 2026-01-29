@@ -1,3 +1,10 @@
+<!--
+Template: Design System
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Design System
 
 CSS variables, color schemes, and typography standards for HTML presentations.

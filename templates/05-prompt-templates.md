@@ -1,3 +1,10 @@
+<!--
+Template: Prompt Templates
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Prompt Templates
 
 **Used in:** Phase 1 (Research Architecture) and Phase 2 (Dual-Tool Research Execution)

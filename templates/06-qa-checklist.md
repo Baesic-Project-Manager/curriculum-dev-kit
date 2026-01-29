@@ -1,3 +1,10 @@
+<!--
+Template: Pre-Delivery QA Checklist
+Version: 2.0.0
+Last Updated: 2025-01-29
+Changelog: https://github.com/Baesic-Project-Manager/curriculum-dev-kit/wiki/Template-Changelog
+-->
+
 # Pre-Delivery QA Checklist
 
 **Use when:** Before delivering any presentation
