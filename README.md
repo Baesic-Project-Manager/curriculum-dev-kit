@@ -217,7 +217,7 @@ This system was developed for professional certificate curriculum at scale.
 
 **Scale:**
 - 50+ modules developed with this methodology
-- 6-course certificate program
+- multi-course certificate program
 - 90-minute session format
 - Consistent quality across different content areas
 
@@ -240,11 +240,11 @@ This system was developed for professional certificate curriculum at scale.
 
 ## Related
 
-This is part of a broader teaching methodology documented in [teaching-at-scale](https://github.com/Baesic-Project-Manager/teaching-at-scale).
+This is part of a broader teaching methodology documented in [teaching-at-scale](https://github.com/{your-username}/teaching-at-scale).
 
 | Related Repo | What It Covers |
 |--------------|----------------|
-| [recording-pipeline](https://github.com/Baesic-Project-Manager/recording-pipeline) | Post-recording automation (after you record) |
+| [recording-pipeline](https://github.com/{your-username}/recording-pipeline) | Post-recording automation (after you record) |
 | curriculum-dev-kit | Pre-recording content development (this repo) |
 
 ---
