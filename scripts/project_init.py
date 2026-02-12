@@ -14,6 +14,8 @@ Usage:
 
 import argparse
 import os
+import shutil
+import subprocess
 from datetime import datetime
 from pathlib import Path
 
@@ -200,6 +202,37 @@ Create a Topic Outline Review using the template. I need:
 Target session length: {duration} minutes ({duration - BUFFER_MINUTES} usable, {max_slides} slides max)"""
 
 
+def launch_claude_code(prompt: str, working_dir: Path,
+                       additional_dirs: list[Path] = None) -> bool:
+    """
+    Launch Claude Code with the given prompt and working directory.
+    Returns True on successful launch, False otherwise.
+    """
+    claude_path = shutil.which("claude")
+    if not claude_path:
+        print("[ERROR] Claude Code CLI not found in PATH")
+        return False
+
+    cmd = [claude_path]
+
+    if additional_dirs:
+        for dir_path in additional_dirs:
+            if dir_path.exists():
+                cmd.extend(["--add-dir", str(dir_path)])
+
+    cmd.append(prompt)
+
+    print(f"\n[LAUNCHING] Claude Code in {working_dir}")
+    print("[INFO] Claude will have access to the rework folder and source files")
+
+    try:
+        subprocess.run(cmd, cwd=str(working_dir), shell=False)
+        return True
+    except Exception as e:
+        print(f"[ERROR] Failed to launch Claude Code: {e}")
+        return False
+
+
 # =============================================================================
 # MAIN FUNCTION
 # =============================================================================
@@ -222,12 +255,25 @@ def initialize_project(course: int, module: int, title: str,
     course_folder = BASE_COURSE_PATH / f"Course {course}"
     if not course_folder.exists():
         print(f"ERROR: Course folder not found: {course_folder}")
+        try:
+            available = [p.name for p in BASE_COURSE_PATH.iterdir() if p.is_dir()]
+            if available:
+                print(f"Available courses: {available}")
+        except OSError:
+            pass
         return False
 
     # Validate module folder
     module_folder = course_folder / f"Module {module}"
     if not module_folder.exists():
         print(f"ERROR: Module folder not found: {module_folder}")
+        try:
+            modules = [p.name for p in course_folder.iterdir()
+                       if p.is_dir() and p.name.startswith("Module")]
+            if modules:
+                print(f"Available modules: {modules}")
+        except OSError:
+            pass
         return False
 
     # Check for existing reworks
@@ -299,11 +345,20 @@ def initialize_project(course: int, module: int, title: str,
     print(f"Target: {duration} min / {max_slides} slides max")
     print(divider)
 
-    # Output prompt
-    if print_only or no_launch:
+    # Handle output mode
+    if print_only:
         print("\nPROMPT TO START PHASE 1:\n")
         print(prompt)
         print(f"\n{divider}")
+    elif not no_launch:
+        additional_dirs = [d for d in [
+            source_path.parent if source_path else None,
+            STARTER_KIT_PATH,
+        ] if d and d.exists()]
+        launch_claude_code(prompt, rework_folder, additional_dirs)
+    else:
+        print("\n[INFO] Files created. Use --print-only to see the prompt, "
+              "or remove --no-launch to auto-start Claude.")
 
     return True
 
